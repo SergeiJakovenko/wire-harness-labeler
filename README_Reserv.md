@@ -1,4 +1,4 @@
-# wire-harness-labeler
+\# wire-harness-labeler
 
 
 
@@ -10,13 +10,13 @@ Generates a complete label set for one harness build — one 1D barcode and one 
 
 
 
-## What it does
+\## What it does
 
 
 
-- One cabinet type selection produces **all section labels at once**.
+\- One cabinet type selection produces \*\*all section labels at once\*\*.
 
-- Supported cabinet types:
+\- Supported cabinet types:
 
 &#x20; - ``KKT``  → sections ``J00``, ``J01``, ``J02``, ``J03``
 
@@ -24,11 +24,11 @@ Generates a complete label set for one harness build — one 1D barcode and one 
 
 &#x20; - ``KKKT`` → sections ``J00``, ``J01``, ``J02``, ``J03``, ``J04``
 
-- Each label carries a payload like ``0007KKTJ01`` (build number + cabinet + section).
+\- Each label carries a payload like ``0007KKTJ01`` (build number + cabinet + section).
 
-- The counter in ``counter.txt`` is committed **only after every label in the batch has been written**. A failure mid-batch leaves the counter untouched — no gaps, no duplicates.
+\- The counter in ``counter.txt`` is committed \*\*only after every label in the batch has been written\*\*. A failure mid-batch leaves the counter untouched — no gaps, no duplicates.
 
-- Files are stored per build:
+\- Files are stored per build:
 
 
 
@@ -38,7 +38,7 @@ generated\_qrcodes/0007\_KKT/qrcode\_0007KKTJ00.png
 
 
 
-## Web UI
+\## Web UI
 
 
 
@@ -46,17 +46,17 @@ Flask app, Estonian interface, three fields: tester name, cabinet type, submit.
 
 
 
-- ``app.py`` — Flask controller (routes, file serving).
+\- ``app.py`` — Flask controller (routes, file serving).
 
-- ``barcode\_generator.py`` — core: validation, payload assembly, image generation, counter.
+\- ``barcode\_generator.py`` — core: validation, payload assembly, image generation, counter.
 
-- ``templates/index.html`` — UI (Estonian).
+\- ``templates/index.html`` — UI (Estonian).
 
-- ``WireTester.spec`` — PyInstaller build config.
+\- ``WireTester.spec`` — PyInstaller build config.
 
 
 
-## Run from source
+\## Run from source
 
 
 
@@ -80,7 +80,7 @@ Then open http://127.0.0.1:5000.
 
 
 
-## Build a standalone .exe
+\## Build a standalone .exe
 
 
 
@@ -98,7 +98,7 @@ Output: dist\\WireTester.exe. Copy it to an empty folder and run — the app cre
 
 
 
-## Stack
+\## Stack
 
 
 
@@ -112,7 +112,7 @@ Output: dist\\WireTester.exe. Copy it to an empty folder and run — the app cre
 
 
 
-## License
+\## License
 
 
 
