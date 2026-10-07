@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keskpinge seadmete juhtmetester</title>
+    <style>
+        * { box-sizing: border-box; font-family: Arial, sans-serif; }
+        body {
+            background-color: #f4f6f9;
+            margin: 0; padding: 20px;
+            display: flex; justify-content: center;
+        }
+        .container {
+            width: 100%; max-width: 900px;
+            background: #ffffff; padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            font-size: 22px; color: #2c3e50;
+            margin: 0 0 20px 0; text-align: center;
+            border-bottom: 2px solid #e2e8f0; padding-bottom: 10px;
+        }
+        .form-group { margin-bottom: 15px; }
+        label {
+            display: block; font-weight: bold;
+            margin-bottom: 5px; color: #34495e;
+        }
+        input[type="text"], select {
+            width: 100%; padding: 12px; font-size: 16px;
+            border: 2px solid #cbd5e1; border-radius: 6px;
+            outline: none; background: #fff;
+        }
+        input[type="text"]:focus, select:focus { border-color: #3182ce; }
+        .hint { font-size: 11px; color: #718096; margin-top: 4px; }
+        button {
+            width: 100%; padding: 14px; font-size: 18px;
+            font-weight: bold; color: #fff;
+            background-color: #2b6cb0; border: none;
+            border-radius: 6px; cursor: pointer; margin-top: 15px;
+        }
+        button:hover { background-color: #2c5282; }
+        button:active { background-color: #1a365d; }
+        .alert-error {
+            background-color: #fed7d7; color: #9b2c2c;
+            padding: 12px; border-radius: 6px;
+            margin-bottom: 15px; font-weight: bold;
+        }
+        .info-strip {
+            background: #ebf8ff; color: #2c5282;
+            padding: 10px 14px; border-radius: 6px;
+            margin-bottom: 18px; font-size: 14px;
+        }
+        .result-box {
+            margin-top: 25px; padding: 20px;
+            background-color: #f7fafc;
+            border: 2px dashed #cbd5e1; border-radius: 8px;
+        }
+        .result-header {
+            text-align: center; margin-bottom: 15px;
+        }
+        .result-header h3 { margin: 0 0 8px 0; }
+        .result-meta {
+            font-size: 14px; color: #4a5568;
+            text-align: center; margin-bottom: 20px;
+        }
+        .result-meta code {
+            background: #edf2f7; padding: 2px 6px;
+            border-radius: 3px; word-break: break-all;
+        }
+        .label-card {
+            background: #fff; border: 1px solid #e2e8f0;
+            border-radius: 8px; padding: 15px;
+            margin-bottom: 15px;
+        }
+        .label-card h4 {
+            margin: 0 0 10px 0; color: #2d3748;
+            border-bottom: 1px solid #edf2f7;
+            padding-bottom: 6px; font-size: 15px;
+        }
+        .label-card .payload-line {
+            font-size: 12px; color: #718096;
+            margin-bottom: 10px;
+        }
+        .label-card .payload-line code {
+            background: #edf2f7; padding: 2px 6px;
+            border-radius: 3px; word-break: break-all;
+        }
+        .images-flex {
+            display: flex; justify-content: space-around;
+            align-items: center; flex-wrap: wrap;
+            gap: 15px;
+        }
+        .image-card {
+            background: #fff; padding: 8px;
+            border-radius: 6px; border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        .image-card img { max-width: 100%; height: auto; display: block; }
+        .image-card .caption {
+            font-size: 12px; color: #718096; margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Keskpinge seadmete juhtmetester</h1>
+
+    {% if error %}
+    <div class="alert-error">Viga: {{ error }}</div>
+    {% endif %}
+
+    <div class="info-strip">
+        Järgmine komplekti number: <strong>{{ next_build_num }}</strong>
+        &nbsp;•&nbsp;
+        Siltide komplekt luuakse automaatselt kõikidele valitud kapi sektsioonidele.
+    </div>
+
+    <form method="POST" action="/">
+        <div class="form-group">
+            <label for="tester_name">Testija:</label>
+            <input type="text" id="tester_name" name="tester_name"
+                   placeholder="Näiteks: MARKUS"
+                   maxlength="32" required autofocus>
+            <div class="hint">Ainult inglise tähed, numbrid, sidekriips või alakriips.</div>
+        </div>
+
+        <div class="form-group">
+            <label for="cabinet_type">Kapi tüüp:</label>
+            <select id="cabinet_type" name="cabinet_type" required>
+                {% for cab in cabinet_options %}
+                    <option value="{{ cab }}">{{ cab }}</option>
+                {% endfor %}
+            </select>
+            <div class="hint">
+                KKT → sektsioonid J00–J03 &nbsp;|&nbsp;
+                KKTT → J00–J04 &nbsp;|&nbsp;
+                KKKT → J00–J04
+            </div>
+        </div>
+
+        <button type="submit">Genereeri sildid</button>
+    </form>
+
+    {% if result %}
+    <div class="result-box">
+        <div class="result-header">
+            <h3>Sildid on genereeritud</h3>
+        </div>
+        <div class="result-meta">
+            Projekt: <strong>{{ result.project }}</strong><br>
+            Testija: <strong>{{ result.tester }}</strong><br>
+            Komplekt: <code>{{ result.build_num }}</code> &nbsp;•&nbsp;
+            Kapp: <code>{{ result.cabinet }}</code> &nbsp;•&nbsp;
+            Kaust: <code>{{ result.build_folder }}</code><br>
+            Siltide arv: <strong>{{ result.labels|length }}</strong>
+        </div>
+
+        {% for lbl in result.labels %}
+        <div class="label-card">
+            <h4>Sektsioon {{ lbl.section }}</h4>
+            <div class="payload-line">
+                Kood: <code>{{ lbl.payload }}</code>
+            </div>
+            <div class="images-flex">
+                <div class="image-card">
+                    <img src="{{ lbl.barcode_url }}" alt="Triipkood {{ lbl.payload }}">
+                    <div class="caption">1D Code128</div>
+                </div>
+                <div class="image-card">
+                    <img src="{{ lbl.qr_url }}" alt="QR-kood {{ lbl.payload }}">
+                    <div class="caption">QR-kood</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+</body>
+</html>

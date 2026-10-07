@@ -1,0 +1,29 @@
+﻿#--- Python ---
+_Pycache_/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+#--- Virtual enviroment ---
+.venv/
+venv/
+env/
+
+#--- Pyinstaller build artifacts ---
+build/
+dist/
+*.spec.bak
+
+#--- Generated runtime files ---
+counter.txt
+generated_barcodes/
+generated_qrcodes/
+*.log
+
+#--- IDE / editor ---
+.vscode/
+
+.vscod
+.idea/
+*.swp
+.DS_Store
